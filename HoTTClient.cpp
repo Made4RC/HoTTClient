@@ -99,7 +99,7 @@ uint8_t* HoTTClient::_sendRequest(uint8_t module_id) {
 	mySerial.read();
 	
 	// max. 100ms versuchen, die 45 Byte Telemetriedaten zu empfangen
-	uint8_t telemetryData[] = {  
+	static uint8_t telemetryData[] = {  
 		0x00, 										/*  0 						Startbyte 0x7C */
 		0x00,										/*  1						Module ID */  
 		0x00,										/*  2						Alarm */ 
