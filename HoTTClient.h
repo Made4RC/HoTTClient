@@ -111,8 +111,6 @@ public:
 	uint16_t speed;					// [m/s], valid with HOTT_GPS_MODULE_ID
 	uint16_t distance;				// [m], valid with HOTT_GPS_MODULE_ID
 	uint8_t direction;				// [°], valid with HOTT_GPS_MODULE_ID
-	float logitudeStartPosition;	// valid with HOTT_GPS_MODULE_ID
-	float latitudeStartPosition;	// valid with HOTT_GPS_MODULE_ID
 	float logitudeCurrentPosition;	// valid with HOTT_GPS_MODULE_ID
 	float latitudeCurrentPosition;	// valid with HOTT_GPS_MODULE_ID
 	char message[22];				

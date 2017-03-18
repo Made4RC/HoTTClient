@@ -53,8 +53,6 @@ HoTTClient::HoTTClient() {
 	speed = 0;
 	distance = 0;
 	direction = 0;
-	logitudeStartPosition = 0.0;
-	latitudeStartPosition = 0.0;
 	logitudeCurrentPosition = 0.0;
 	latitudeCurrentPosition = 0.0;
 }
@@ -305,10 +303,13 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 	speed = 0;
 	distance = 0;
 	direction = 0;
-	logitudeStartPosition = 0.0;
-	latitudeStartPosition = 0.0;
 	logitudeCurrentPosition = 0.0;
 	latitudeCurrentPosition = 0.0;
+
+	uint16_t dm = 0;
+	uint8_t grad = 0;
+	uint16_t minuten = 0;
+	uint16_t sekunden = 0;
 
 	switch (telemetryData[1]) {
 		case HOTT_ELECTRIC_AIR_MODULE_ID:
@@ -375,10 +376,21 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 			speed = word(telemetryData[8], telemetryData[7]);
 			distance = word(telemetryData[20], telemetryData[17]);
 			direction = telemetryData[6]*2;
-			logitudeStartPosition = 0.0;
-			latitudeStartPosition = 0.0;
-			logitudeCurrentPosition = 0.0;
-			latitudeCurrentPosition = 0.0;
+
+			dm = word(telemetryData[11], telemetryData[10]);
+			grad = dm/100;
+			minuten = dm-(grad*100);
+			sekunden = word(telemetryData[13], telemetryData[12]);
+
+			// https://de.wikipedia.org/wiki/Winkelminute
+			logitudeCurrentPosition = grad + minuten/60.0 + sekunden/3600.0;
+
+			dm = word(telemetryData[16], telemetryData[15]);
+			grad = dm/100;
+			minuten = dm-(grad*100);
+			sekunden = word(telemetryData[18], telemetryData[17]);
+
+			latitudeCurrentPosition = grad + minuten/60.0 + sekunden/3600.0;
 		break;
 		case HOTT_VARIO_MODULE_ID:
 			altitude = word(telemetryData[6], telemetryData[5]) - 500;
