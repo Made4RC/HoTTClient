@@ -67,7 +67,20 @@ void loop() {
 			case HOTT_GENERAL_AIR_MODULE_ID:
 				break;
 			case HOTT_GPS_MODULE_ID:
-				break;
+				Serial.print("Höhe: ");
+				Serial.print(sensor.altitude);
+				Serial.print("m, Steigrate: ");
+				Serial.print(sensor.climbRate);
+				Serial.print("m/s, Geschwindigkeit: ");
+				Serial.print(sensor.speed);
+				Serial.print("km/h, Entfernung: ");
+				Serial.print(sensor.distance);
+				Serial.print("m, Richtung: ");
+				Serial.print(sensor.direction);
+				Serial.print("m, Position: ");
+				Serial.print(sensor.logitudeCurrentPosition);
+				Serial.print("/");
+				Serial.println(sensor.latitudeCurrentPosition);			
 			case HOTT_VARIO_MODULE_ID:
 				Serial.print("Höhe: ");
 				Serial.print(sensor.altitude);
