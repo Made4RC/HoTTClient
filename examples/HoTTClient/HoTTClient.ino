@@ -77,7 +77,7 @@ void loop() {
 				Serial.print(sensor.distance);
 				Serial.print("m, Richtung: ");
 				Serial.print(sensor.direction);
-				Serial.print("m, Position: ");
+				Serial.print("Grad, Position: ");
 				Serial.print(sensor.logitudeCurrentPosition);
 				Serial.print("/");
 				Serial.println(sensor.latitudeCurrentPosition);			
