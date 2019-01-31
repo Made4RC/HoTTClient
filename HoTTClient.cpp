@@ -368,29 +368,34 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 		break;
 		case HOTT_GPS_MODULE_ID:
 			altitude = word(telemetryData[22], telemetryData[21]) - 500;
-			if (word(telemetryData[24], telemetryData[23]) > 30000) {
-				climbRate = (word(telemetryData[24], telemetryData[23])-30000) * 0.01;				
-			} else {
-				climbRate = (30000-word(telemetryData[24], telemetryData[23])) * 0.01;
-			}
+			climbRate = (word(telemetryData[24], telemetryData[23]) - 30000) * 0.01;				
 			speed = word(telemetryData[8], telemetryData[7]);
-			distance = word(telemetryData[20], telemetryData[17]);
+			distance = word(telemetryData[20], telemetryData[19]);
+
 			direction = telemetryData[6]*2;
 
+			uint16_t dm = 0;
+			uint8_t grad = 0;
+			uint16_t minuten = 0;
+			uint16_t sekunden = 0;
+	
 			dm = word(telemetryData[11], telemetryData[10]);
-			grad = dm/100;
-			minuten = dm-(grad*100);
+			minuten = dm % 100;
+			grad = (dm - minuten) / 100;
+			Serial.println(grad);
 			sekunden = word(telemetryData[13], telemetryData[12]);
 
 			// https://de.wikipedia.org/wiki/Winkelminute
-			logitudeCurrentPosition = grad + minuten/60.0 + sekunden/3600.0;
-
+			// FIXME Sekunden fehlen
+			logitudeCurrentPosition = grad + minuten/60.0;
+	
 			dm = word(telemetryData[16], telemetryData[15]);
-			grad = dm/100;
-			minuten = dm-(grad*100);
+			minuten = dm % 100;
+			grad = (dm - minuten) / 100;
 			sekunden = word(telemetryData[18], telemetryData[17]);
-
-			latitudeCurrentPosition = grad + minuten/60.0 + sekunden/3600.0;
+	
+			// FIXME Sekunden fehlen
+			latitudeCurrentPosition = grad + minuten/60.0;
 		break;
 		case HOTT_VARIO_MODULE_ID:
 			altitude = word(telemetryData[6], telemetryData[5]) - 500;
