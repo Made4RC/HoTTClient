@@ -333,11 +333,7 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 			cellVoltage13 = telemetryData[18] / 100.0 * 2;
 			cellVoltage14 = telemetryData[19] / 100.0 * 2;
 			altitude = word(telemetryData[27], telemetryData[26]) - 500;		
-			if (word(telemetryData[35], telemetryData[34]) > 30000) {
-				climbRate = (word(telemetryData[35], telemetryData[34])-30000) * 0.01;				
-			} else {
-				climbRate = (30000-word(telemetryData[35], telemetryData[34])) * 0.01;
-			}
+			climbRate = (word(telemetryData[35], telemetryData[34]) - 30000.0) * 0.01;				
 			temperature1 = telemetryData[24] - 20;	
 			temperature2 = telemetryData[25] - 20;	
 			rpm = word(telemetryData[38], telemetryData[38]) * 10;		
@@ -355,11 +351,7 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 			cellVoltage5 = telemetryData[10] / 100.0 * 2;
 			cellVoltage6 = telemetryData[11] / 100.0 * 2;
 			altitude = word(telemetryData[24], telemetryData[23]) - 500;		
-			if (word(telemetryData[26], telemetryData[25]) > 30000) {
-				climbRate = (word(telemetryData[26], telemetryData[25])-30000) * 0.01;				
-			} else {
-				climbRate = (30000-word(telemetryData[26], telemetryData[25])) * 0.01;
-			}
+			climbRate = (word(telemetryData[26], telemetryData[25]) - 30000.0) * 0.01;				
 			fuelPercentage = telemetryData[18];
 			fuel = word(telemetryData[20], telemetryData[19]);			
 			temperature1 = telemetryData[16] - 20;	
@@ -368,7 +360,7 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 		break;
 		case HOTT_GPS_MODULE_ID:
 			altitude = word(telemetryData[22], telemetryData[21]) - 500;
-			climbRate = (word(telemetryData[24], telemetryData[23]) - 30000) * 0.01;				
+			climbRate = (word(telemetryData[24], telemetryData[23]) - 30000.0) * 0.01;				
 			speed = word(telemetryData[8], telemetryData[7]);
 			distance = word(telemetryData[20], telemetryData[19]);
 
@@ -398,11 +390,7 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 		break;
 		case HOTT_VARIO_MODULE_ID:
 			altitude = word(telemetryData[6], telemetryData[5]) - 500;
-			if (word(telemetryData[12], telemetryData[11]) > 30000) {
-				climbRate = (word(telemetryData[12], telemetryData[11])-30000) * 0.01;				
-			} else {
-				climbRate = (30000-word(telemetryData[12], telemetryData[11])) * 0.01;
-			}
+			climbRate = (word(telemetryData[12], telemetryData[11]) - 30000.0) * 0.01;				
 		break;
 		case HOTT_AIRESC_MODULE_ID:
 			capacity = word(telemetryData[11], telemetryData[10]) * 10;
