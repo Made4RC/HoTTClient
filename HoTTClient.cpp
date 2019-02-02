@@ -382,7 +382,6 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 			dm = word(telemetryData[11], telemetryData[10]);
 			minuten = dm % 100;
 			grad = (dm - minuten) / 100;
-			Serial.println(grad);
 			sekunden = word(telemetryData[13], telemetryData[12]);
 
 			// https://de.wikipedia.org/wiki/Winkelminute
