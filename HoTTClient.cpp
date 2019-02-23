@@ -369,24 +369,50 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 			uint16_t dm = 0;
 			uint8_t grad = 0;
 			uint16_t minuten = 0;
-			uint16_t sekunden = 0;
-	
+			uint16_t dezimalminuten = 0;
+			float tmp = 0.0; 
+			
 			dm = word(telemetryData[11], telemetryData[10]);
 			minuten = dm % 100;
 			grad = (dm - minuten) / 100;
-			sekunden = word(telemetryData[13], telemetryData[12]);
+			dezimalminuten = word(telemetryData[13], telemetryData[12]);
 
-			// https://de.wikipedia.org/wiki/Winkelminute
-			// FIXME Sekunden fehlen
-			logitudeCurrentPosition = grad + minuten/60.0;
+			if ( dezimalminuten > 9 && dezimalminuten < 100 ) {
+				// 10 - 99
+				tmp = dezimalminuten / 100.0;
+			} else if ( dezimalminuten > 99 && dezimalminuten < 1000) {
+				// 100 - 999
+				tmp = dezimalminuten / 1000.0;
+			} else if ( dezimalminuten > 999 ) {
+				// 1000 - 9999
+				tmp = dezimalminuten / 10000.0;
+			} else {
+				// 0 - 9
+				tmp = dezimalminuten / 10.0;
+			}
+
+			logitudeCurrentPosition = grad + (minuten+tmp)/60.0;
 	
 			dm = word(telemetryData[16], telemetryData[15]);
 			minuten = dm % 100;
 			grad = (dm - minuten) / 100;
-			sekunden = word(telemetryData[18], telemetryData[17]);
+			dezimalminuten = word(telemetryData[18], telemetryData[17]);
+
+			if ( dezimalminuten > 9 && dezimalminuten < 100 ) {
+				// 10 - 99
+				tmp = dezimalminuten / 100.0;
+			} else if ( dezimalminuten > 99 && dezimalminuten < 1000) {
+				// 100 - 999
+				tmp = dezimalminuten / 1000.0;
+			} else if ( dezimalminuten > 999 ) {
+				// 1000 - 9999
+				tmp = dezimalminuten / 10000.0;
+			} else {
+				// 0 - 9
+				tmp = dezimalminuten / 10.0;
+			}
 	
-			// FIXME Sekunden fehlen
-			latitudeCurrentPosition = grad + minuten/60.0;
+			latitudeCurrentPosition = grad + (minuten+tmp)/60.0;
 		break;
 		case HOTT_VARIO_MODULE_ID:
 			altitude = word(telemetryData[6], telemetryData[5]) - 500;
