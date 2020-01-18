@@ -27,7 +27,7 @@ HoTTClient::HoTTClient() {
 	voltage1 = 0.0;
 	voltage2 = 0.0;
 	mainVoltage = 0.0;
-	BECVoltage = 0.0;			
+	BECVoltage = 0.0;
 	cellVoltage1 = 0.0;
 	cellVoltage2 = 0.0;
 	cellVoltage3 = 0.0;
@@ -76,10 +76,10 @@ void HoTTClient::start() {
 	mySerial.listen();
 	if (mySerial.isListening()) {
 #ifdef  __HOTT_LOGGING__
-   		Serial.println("Sensor port is listening!"); 
+   		Serial.println("Sensor port is listening!");
 #endif /* __HOTT_LOGGING__ */
    	}
-   
+
 }
 
 uint8_t* HoTTClient::_sendRequest(uint8_t module_id) {
@@ -95,24 +95,24 @@ uint8_t* HoTTClient::_sendRequest(uint8_t module_id) {
 	mySerial.write(module_id);
 	delay(1);
 	mySerial.read();
-	
+
 	// max. 100ms versuchen, die 45 Byte Telemetriedaten zu empfangen
-	static uint8_t telemetryData[] = {  
+	static uint8_t telemetryData[] = {
 		0x00, 										/*  0 						Startbyte 0x7C */
-		0x00,										/*  1						Module ID */  
-		0x00,										/*  2						Alarm */ 
+		0x00,										/*  1						Module ID */
+		0x00,										/*  2						Alarm */
 		0x00, 										/*  3 						Sensor ID */
-		0x00, 0x00,									/*  4,  5					Inverted Value 1 and 2 */ 
+		0x00, 0x00,									/*  4,  5					Inverted Value 1 and 2 */
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/*  6,  7,  8,  9, 10, 11	Telemetry data content ...*/
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 12, 13, 14, 15, 16, 17	... */ 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 18, 19, 20, 21, 22, 23	... */  
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 24, 25, 26, 27, 28, 29	... */ 
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 30, 31, 32, 33, 34, 35	... */  
-		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 36, 37, 38, 39, 40, 41	... */ 
-		0x00,										/* 42						Version Number */ 
-		0x00,										/* 43						End sign 0x7D */ 
-		0x00										/* 44						Checksum */ 
-	}; 
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 12, 13, 14, 15, 16, 17	... */
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 18, 19, 20, 21, 22, 23	... */
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 24, 25, 26, 27, 28, 29	... */
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 30, 31, 32, 33, 34, 35	... */
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00,			/* 36, 37, 38, 39, 40, 41	... */
+		0x00,										/* 42						Version Number */
+		0x00,										/* 43						End sign 0x7D */
+		0x00										/* 44						Checksum */
+	};
 
 
 	unsigned long startMillis = millis();
@@ -126,7 +126,7 @@ uint8_t* HoTTClient::_sendRequest(uint8_t module_id) {
 //			printHex(readByte,2);
 			telemetryData[byteCount] = readByte;
 			byteCount++;
-			
+
 			startMillis = millis();
 		}
 		currentMillis = millis();
@@ -136,7 +136,7 @@ uint8_t* HoTTClient::_sendRequest(uint8_t module_id) {
 #endif /* __HOTT_LOGGING__ */
 			// keine Antwort in der erlaubten Zeit
 			return 0;
-		}		
+		}
 	}
 #ifdef  __HOTT_LOGGING__
 	Serial.println();
@@ -168,12 +168,12 @@ uint8_t* HoTTClient::_sendRequest(uint8_t module_id) {
 	printHex(telemetryData[44],2);
 	Serial.println("");
 #endif /* __HOTT_LOGGING__ */
-	
+
 	if ( telemetryData[0] != 0x7C ) {
 #ifdef  __HOTT_LOGGING__
 		Serial.print("Startbyte falsch: erwartet 0x7c empfangen ");
 		printHex(telemetryData[3],0);
-		Serial.println(" ");		
+		Serial.println(" ");
 #endif /* __HOTT_LOGGING__ */
 		return 0;  // FIXME Error codes
 	}
@@ -191,7 +191,7 @@ uint8_t* HoTTClient::_sendRequest(uint8_t module_id) {
 #ifdef  __HOTT_LOGGING__
 		Serial.print("Endbyte falsch: erwartet 0x7d empfangen ");
 		printHex(telemetryData[3],43);
-		Serial.println(" ");		
+		Serial.println(" ");
 #endif /* __HOTT_LOGGING__ */
 		return 0; // FIXME Error codes
 	}
@@ -205,7 +205,7 @@ uint8_t* HoTTClient::_sendRequest(uint8_t module_id) {
 #endif /* __HOTT_LOGGING__ */
 		return 0; // FIXME Error codes
 	}
-	
+
 	switch (module_id) {
 		case HOTT_ELECTRIC_AIR_MODULE_ID:
 			if (telemetryData[3] != HOTT_ELECTRIC_AIR_SENSOR_ID) {
@@ -277,7 +277,7 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 	voltage1 = 0.0;
 	voltage2 = 0.0;
 	mainVoltage = 0.0;
-	BECVoltage = 0.0;			
+	BECVoltage = 0.0;
 	cellVoltage1 = 0.0;
 	cellVoltage2 = 0.0;
 	cellVoltage3 = 0.0;
@@ -306,10 +306,12 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 	logitudeCurrentPosition = 0.0;
 	latitudeCurrentPosition = 0.0;
 
+/*
 	uint16_t dm = 0;
 	uint8_t grad = 0;
 	uint16_t minuten = 0;
 	uint16_t sekunden = 0;
+*/
 
 	switch (telemetryData[1]) {
 		case HOTT_ELECTRIC_AIR_MODULE_ID:
@@ -332,11 +334,11 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 			cellVoltage12 = telemetryData[17] / 100.0 * 2;
 			cellVoltage13 = telemetryData[18] / 100.0 * 2;
 			cellVoltage14 = telemetryData[19] / 100.0 * 2;
-			altitude = word(telemetryData[27], telemetryData[26]) - 500;		
-			climbRate = (word(telemetryData[35], telemetryData[34]) - 30000.0) * 0.01;				
-			temperature1 = telemetryData[24] - 20;	
-			temperature2 = telemetryData[25] - 20;	
-			rpm = word(telemetryData[38], telemetryData[38]) * 10;		
+			altitude = word(telemetryData[27], telemetryData[26]) - 500;
+			climbRate = (word(telemetryData[35], telemetryData[34]) - 30000.0) * 0.01;
+			temperature1 = telemetryData[24] - 20;
+			temperature2 = telemetryData[25] - 20;
+			rpm = word(telemetryData[38], telemetryData[38]) * 10;
 		break;
 		case HOTT_GENERAL_AIR_MODULE_ID:
 			capacity = word(telemetryData[33], telemetryData[32]) * 10;
@@ -350,17 +352,17 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 			cellVoltage4 = telemetryData[9] / 100.0 * 2;
 			cellVoltage5 = telemetryData[10] / 100.0 * 2;
 			cellVoltage6 = telemetryData[11] / 100.0 * 2;
-			altitude = word(telemetryData[24], telemetryData[23]) - 500;		
-			climbRate = (word(telemetryData[26], telemetryData[25]) - 30000.0) * 0.01;				
+			altitude = word(telemetryData[24], telemetryData[23]) - 500;
+			climbRate = (word(telemetryData[26], telemetryData[25]) - 30000.0) * 0.01;
 			fuelPercentage = telemetryData[18];
-			fuel = word(telemetryData[20], telemetryData[19]);			
-			temperature1 = telemetryData[16] - 20;	
-			temperature2 = telemetryData[17] - 20;	
-			rpm = word(telemetryData[22], telemetryData[21]) * 10;		
+			fuel = word(telemetryData[20], telemetryData[19]);
+			temperature1 = telemetryData[16] - 20;
+			temperature2 = telemetryData[17] - 20;
+			rpm = word(telemetryData[22], telemetryData[21]) * 10;
 		break;
 		case HOTT_GPS_MODULE_ID:
 			altitude = word(telemetryData[22], telemetryData[21]) - 500;
-			climbRate = (word(telemetryData[24], telemetryData[23]) - 30000.0) * 0.01;				
+			climbRate = (word(telemetryData[24], telemetryData[23]) - 30000.0) * 0.01;
 			speed = word(telemetryData[8], telemetryData[7]);
 			distance = word(telemetryData[20], telemetryData[19]);
 
@@ -370,8 +372,9 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 			uint8_t grad = 0;
 			uint16_t minuten = 0;
 			uint16_t dezimalminuten = 0;
-			float tmp = 0.0; 
-			
+			float tmp = 0.0;
+
+/*
 			dm = word(telemetryData[11], telemetryData[10]);
 			minuten = dm % 100;
 			grad = (dm - minuten) / 100;
@@ -392,7 +395,7 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 			}
 
 			logitudeCurrentPosition = grad + (minuten+tmp)/60.0;
-	
+
 			dm = word(telemetryData[16], telemetryData[15]);
 			minuten = dm % 100;
 			grad = (dm - minuten) / 100;
@@ -411,12 +414,13 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 				// 0 - 9
 				tmp = dezimalminuten / 10.0;
 			}
-	
+
 			latitudeCurrentPosition = grad + (minuten+tmp)/60.0;
+*/
 		break;
 		case HOTT_VARIO_MODULE_ID:
 			altitude = word(telemetryData[6], telemetryData[5]) - 500;
-			climbRate = (word(telemetryData[12], telemetryData[11]) - 30000.0) * 0.01;				
+			climbRate = (word(telemetryData[12], telemetryData[11]) - 30000.0) * 0.01;
 		break;
 		case HOTT_AIRESC_MODULE_ID:
 			capacity = word(telemetryData[11], telemetryData[10]) * 10;
@@ -433,9 +437,9 @@ bool HoTTClient::_parseResponse(uint8_t telemetryData[]) {
 
 bool HoTTClient::probe(uint8_t module_id) {
 	if (_sendRequest(module_id)==0) {
-		return false;		
+		return false;
 	} else {
-		return true;		
+		return true;
 	}
 }
 bool HoTTClient::poll(uint8_t module_id) {
