@@ -1,5 +1,6 @@
 # HoTTClient
 Arduino library to read telemetry data from Graupner HoTT-sensors
+Confirmed sensor firmware version: 1.46 and 2.02.
 
 ### Required hardware:
 * Arduino Pro Mini 328, 16Mhz, 5V
